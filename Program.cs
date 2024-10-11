@@ -6,8 +6,18 @@ using Blazorise.Icons.FontAwesome;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorComponents()
+builder.Services
+    .AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// Add Blazorise services
+builder.Services
+    .AddBlazorise(options =>
+    {
+        options.Immediate = true;
+    })
+    .AddBootstrap5Providers()
+    .AddFontAwesomeIcons();
 
 var app = builder.Build();
 
@@ -19,16 +29,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-builder.Services
-    .AddBlazorise( options =>
-    {
-        options.Immediate = true;
-    } )
-    .AddBootstrap5Providers()
-    .AddFontAwesomeIcons();
-
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 app.UseAntiforgery();
 
