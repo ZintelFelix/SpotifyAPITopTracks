@@ -1,7 +1,10 @@
 using SpotifyAPITopTracks.Components;
+using SpotifyAPITopTracks.Services;
+using SpotifyAPITopTracks.Data;
 using Blazorise;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,9 @@ builder.Services
     .AddInteractiveServerComponents();
 
 builder.Services.AddSingleton<CsvService>();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite("Data Source=playlist.db"));
 
 // Add Blazorise services
 builder.Services
@@ -22,6 +28,12 @@ builder.Services
     .AddFontAwesomeIcons();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    DataInitializer.Initialize(db); // Initialisiere die Datenbank und lade CSV-Daten, falls leer
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

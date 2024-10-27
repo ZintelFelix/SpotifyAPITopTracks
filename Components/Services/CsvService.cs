@@ -1,14 +1,25 @@
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using CsvHelper;
+using CsvHelper.Configuration;
+using System.Globalization;
+using SpotifyAPITopTracks.Models;
 
-public class CsvService
+namespace SpotifyAPITopTracks.Services
 {
-    public IEnumerable<PlaylistData> LoadCsvData(string filePath)
+    public class CsvService
     {
-        using var reader = new StreamReader(filePath);
-        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-        return csv.GetRecords<PlaylistData>().ToList();
+        public static List<Track> LoadCsvData(string filePath)
+        {
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HeaderValidated = null, // Ignoriert fehlende Header-Validierung
+                MissingFieldFound = null, // Ignoriert fehlende Felder
+                PrepareHeaderForMatch = args => args.Header.ToLower() // Vergleicht Header unabhängig von der Groß-/Kleinschreibung
+            };
+
+            using var reader = new StreamReader(filePath);
+            using var csv = new CsvReader(reader, config);
+
+            return csv.GetRecords<Track>().ToList();
+        }
     }
 }

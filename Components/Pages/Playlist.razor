@@ -1,5 +1,6 @@
 @page "/playlist"
-@inject CsvService CsvService
+@inject ApplicationDbContext DbContext
+@using SpotifyAPITopTracks.Models
 
 <h3>Spotify Playlist Data</h3>
 
@@ -7,9 +8,8 @@
 {
     <p>Lädt die Daten...</p>
 }
-else
 {
-    <table class="table">
+    <table class="table playlist-table">
         <thead>
             <tr>
                 <th>Track Name</th>
@@ -31,12 +31,10 @@ else
 }
 
 @code {
-    private IEnumerable<PlaylistData> playlistData;
+    private IEnumerable<Track> playlistData;
 
     protected override void OnInitialized()
     {
-        // Pfad zur CSV-Datei im wwwroot-Ordner
-        var filePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "regional-global-weekly-2024-10-24.csv");
-        playlistData = CsvService.LoadCsvData(filePath);
+        playlistData = DbContext.Tracks.ToList();
     }
 }
