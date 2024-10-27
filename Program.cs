@@ -10,6 +10,8 @@ builder.Services
     .AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddSingleton<CsvService>();
+
 // Add Blazorise services
 builder.Services
     .AddBlazorise(options =>

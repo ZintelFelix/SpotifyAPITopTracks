@@ -1,0 +1,42 @@
+@page "/playlist"
+@inject CsvService CsvService
+
+<h3>Spotify Playlist Data</h3>
+
+@if (playlistData == null)
+{
+    <p>Lädt die Daten...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Track Name</th>
+                <th>Artist Names</th>
+                <th>Streams</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var track in playlistData)
+            {
+                <tr>
+                    <td>@track.TrackName</td>
+                    <td>@track.ArtistNames</td>
+                    <td>@track.Streams</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<PlaylistData> playlistData;
+
+    protected override void OnInitialized()
+    {
+        // Pfad zur CSV-Datei im wwwroot-Ordner
+        var filePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "regional-global-weekly-2024-10-24.csv");
+        playlistData = CsvService.LoadCsvData(filePath);
+    }
+}
