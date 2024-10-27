@@ -2,16 +2,18 @@
 @inject ApplicationDbContext DbContext
 @using SpotifyAPITopTracks.Models
 
-<h3>Spotify Playlist Data</h3>
+<h3>Spotify Playlist Data - Top 50 Tracks</h3>
 
 @if (playlistData == null)
 {
     <p>Lädt die Daten...</p>
 }
+else
 {
     <table class="table playlist-table">
         <thead>
             <tr>
+                <th>Rank</th>
                 <th>Track Name</th>
                 <th>Artist Names</th>
                 <th>Streams</th>
@@ -21,6 +23,7 @@
             @foreach (var track in playlistData)
             {
                 <tr>
+                    <td>@track.Rank</td>
                     <td>@track.TrackName</td>
                     <td>@track.ArtistNames</td>
                     <td>@track.Streams</td>
@@ -35,6 +38,10 @@
 
     protected override void OnInitialized()
     {
-        playlistData = DbContext.Tracks.ToList();
+        // Nur die ersten 50 Tracks abfragen, sortiert nach Rank
+        playlistData = DbContext.Tracks
+                        .OrderBy(track => track.Rank)
+                        .Take(50)
+                        .ToList();
     }
 }
