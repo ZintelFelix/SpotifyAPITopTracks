@@ -2,36 +2,77 @@
 @inject ApplicationDbContext DbContext
 @using SpotifyAPITopTracks.Models
 
-<h3>Spotify Playlist Data - Top 50 Tracks</h3>
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 text-light fw-bold">Top 50 Most-Streamed Songs</h1>
+        <p class="lead text-muted">Erlebe die meistgehörten Songs im authentischen Spotify-Stil!</p>
+    </div>
 
-@if (playlistData == null)
-{
-    <p>Lädt die Daten...</p>
-}
-else
-{
-    <table class="table playlist-table">
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Track Name</th>
-                <th>Artist Names</th>
-                <th>Streams</th>
-            </tr>
-        </thead>
-        <tbody>
+    @if (playlistData == null)
+    {
+        <div class="d-flex justify-content-center align-items-center" style="height: 300px;">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Lädt die Daten...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             @foreach (var track in playlistData)
             {
-                <tr>
-                    <td>@track.Rank</td>
-                    <td>@track.TrackName</td>
-                    <td>@track.ArtistNames</td>
-                    <td>@track.Streams</td>
-                </tr>
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 rounded-3 track-card bg-dark text-light">
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-success">@track.Rank. @track.TrackName</h5>
+                            <h6 class="card-subtitle text-muted mb-2">by @track.ArtistNames</h6>
+                            <p class="card-text">
+                                <span class="text-white-50">Streams:</span> <strong>@track.Streams.ToString("N0")</strong>
+                            </p>
+                        </div>
+                        <div class="card-footer bg-success text-white text-center">
+                            <small>Position @track.Rank in den Charts</small>
+                        </div>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
-}
+        </div>
+    }
+</div>
+
+<style>
+    body {
+        background-color: #121212; /* Typische Spotify-Hintergrundfarbe */
+        color: #b3b3b3; /* Standardtextfarbe von Spotify */
+    }
+
+    .track-card {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .track-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .container {
+        background-color: #1e1e1e; /* Dunkler Container-Hintergrund */
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .card-title.text-success {
+        color: #1db954; /* Spotify-grün */
+    }
+
+    .card-footer {
+        background-color: #1db954; /* Spotify-grün für Fußzeile */
+    }
+
+    .text-light {
+        color: #b3b3b3 !important; /* Verleiht dem Text das typische Spotify-Grau */
+    }
+</style>
 
 @code {
     private IEnumerable<Track> playlistData;

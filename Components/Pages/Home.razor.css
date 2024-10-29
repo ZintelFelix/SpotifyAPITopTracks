@@ -1,0 +1,22 @@
+body {
+    background-color: #121212; /* Typischer Spotify-Hintergrund */
+    color: #b3b3b3; /* Standardtextfarbe von Spotify */
+}
+
+.card-title {
+    color: #1db954; /* Spotify-grün */
+}
+
+.text-light {
+    color: #b3b3b3 !important; /* Spotify-grau für Text */
+}
+
+.container {
+    background-color: #1e1e1e; /* Dunkler Container-Hintergrund für Kontrast */
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.list-group-item {
+    border: none; /* Entfernt die Umrandung der Listenelemente für einen cleanen Look */
+}

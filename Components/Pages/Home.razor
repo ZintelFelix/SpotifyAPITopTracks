@@ -1,7 +1,55 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 text-light fw-bold">🎶 Top 50 Most-Streamed Songs Dashboard 🎶</h1>
+        <p class="lead text-muted">Entdecke die meistgehörten Songs und deren Streaming-Statistiken in einem stylischen, Spotify-inspirierten Dashboard.</p>
+    </div>
 
-<h1>Hello, world!</h1>
+    <div class="row">
+        <!-- Projektbeschreibung -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-3 bg-dark text-light mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">📄 Projektbeschreibung</h5>
+                </div>
+                <div class="card-body">
+                    <p>Das Projekt liest die Top 50 meistgehörten Songs aus einer CSV-Datei ein und speichert sie in einer SQLite-Datenbank. Die Daten können jederzeit abgerufen und tabellarisch angezeigt werden. Die Tabelle zeigt das Ranking der Songs, Tracknamen, Künstler und Streaming-Zahlen.</p>
+                </div>
+            </div>
+        </div>
 
-Welcome to your new app.
+        <!-- Hauptfunktionen -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-3 bg-dark text-light mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">⚙️ Hauptfunktionen</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item bg-dark text-light">🔄 <strong>CSV-Datenimport</strong>: Lädt die meistgestreamten Songs und speichert sie in der SQLite-Datenbank.</li>
+                        <li class="list-group-item bg-dark text-light">💾 <strong>Datenpersistenz</strong>: Dauerhafte Speicherung zur schnellen Anzeige und Verwaltung.</li>
+                        <li class="list-group-item bg-dark text-light">📊 <strong>Top 50 Anzeige</strong>: Präsentiert die Songs basierend auf ihrem Ranking.</li>
+                        <li class="list-group-item bg-dark text-light">🧭 <strong>Interaktive Sidebar</strong>: Einfache Navigation durch das Dashboard.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technologie-Stack -->
+    <div class="card shadow-sm border-0 rounded-3 bg-dark text-light mt-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="card-title mb-0">🛠️ Technologie-Stack</h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-dark text-light">🖥️ <strong>Blazor (C#)</strong>: Webentwicklung und Frontend-Logik</li>
+                <li class="list-group-item bg-dark text-light">📂 <strong>SQLite-Datenbank</strong>: Effiziente, dauerhafte Speicherung der Songdaten</li>
+                <li class="list-group-item bg-dark text-light">🔍 <strong>Entity Framework Core</strong>: Verwaltung der Datenbankabfragen</li>
+                <li class="list-group-item bg-dark text-light">📄 <strong>CSVHelper</strong>: Importiert CSV-Daten in die Datenbank</li>
+                <li class="list-group-item bg-dark text-light">🎨 <strong>CSS & Bootstrap</strong>: Styling und responsives Design</li>
+            </ul>
+        </div>
+    </div>
+</div>
