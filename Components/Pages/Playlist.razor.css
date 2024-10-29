@@ -1,0 +1,69 @@
+body {
+    background-color: #121212; /* Typische Spotify-Hintergrundfarbe */
+    color: #b3b3b3; /* Standardtextfarbe von Spotify */
+}
+
+/* Skeleton-Loading-Stil */
+.skeleton-card {
+    background-color: #333;
+    color: transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.skeleton-title, .skeleton-subtitle, .skeleton-text {
+    background: #444;
+    height: 16px;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    animation: skeleton-loading 1.5s infinite ease-in-out;
+}
+
+.skeleton-title {
+    width: 70%;
+    height: 24px;
+}
+
+.skeleton-subtitle {
+    width: 50%;
+}
+
+.skeleton-text {
+    width: 80%;
+    height: 20px;
+}
+
+@keyframes skeleton-loading {
+    0% { background-color: #333; }
+    50% { background-color: #444; }
+    100% { background-color: #333; }
+}
+
+/* Kartenstil */
+.track-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.track-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.container {
+    background-color: #1e1e1e; /* Dunkler Container-Hintergrund */
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.card-title.text-success {
+    color: #1db954; /* Spotify-grün */
+}
+
+.card-footer {
+    background-color: #1db954; /* Spotify-grün für Fußzeile */
+}
+
+.text-light {
+    color: #b3b3b3 !important; /* Verleiht dem Text das typische Spotify-Grau */
+}
