@@ -12,6 +12,11 @@ body {
     position: relative;
 }
 
+.skeleton-cover {
+    background: #444;
+    animation: skeleton-loading 1.5s infinite ease-in-out;
+}
+
 .skeleton-title, .skeleton-subtitle, .skeleton-text {
     background: #444;
     height: 16px;

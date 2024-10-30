@@ -14,6 +14,7 @@ builder.Services
     .AddInteractiveServerComponents();
 
 builder.Services.AddSingleton<CsvService>();
+builder.Services.AddSingleton<SpotifyService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("Data Source=playlist.db"));
