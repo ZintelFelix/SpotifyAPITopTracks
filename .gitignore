@@ -157,3 +157,4 @@ PublishScripts/
 
 # JetBrains Rider
 *.sln.iml
+load-secrets.sh
