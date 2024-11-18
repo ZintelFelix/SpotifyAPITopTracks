@@ -34,9 +34,5 @@ namespace SpotifyAPITopTracks.Models
 
         [Name("streams")]
         public int Streams { get; set; }
-
-        // Neue Eigenschaft für das Album-Cover-URL
-        [Ignore] // Ignoriere das Feld beim CSV-Import
-        public string AlbumCoverUrl { get; set; }
     }
 }

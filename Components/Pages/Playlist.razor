@@ -1,6 +1,5 @@
 @page "/playlist"
 @inject ApplicationDbContext DbContext
-@inject SpotifyAPITopTracks.Services.SpotifyService SpotifyService
 @using SpotifyAPITopTracks.Models
 
 <div class="container my-5">
@@ -36,15 +35,6 @@
             {
                 <div class="col">
                     <div class="card h-100 shadow-sm border-0 rounded-3 track-card bg-dark text-light">
-                        @if (!string.IsNullOrEmpty(track.AlbumCoverUrl))
-                        {
-                            <img src="@track.AlbumCoverUrl" class="card-img-top" alt="Album Cover" style="height: 180px; object-fit: cover;">
-                        }
-                        else
-                        {
-                            <!-- Skeleton-Bild anzeigen, solange AlbumCoverUrl noch geladen wird -->
-                            <div class="skeleton-cover" style="height: 180px;"></div>
-                        }
                         <div class="card-body p-4">
                             <h5 class="card-title text-success">@track.Rank. @track.TrackName</h5>
                             <h6 class="card-subtitle text-muted mb-2">by @track.ArtistNames</h6>
@@ -67,15 +57,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        playlistData = DbContext.Tracks
-                        .OrderBy(track => track.Rank)
-                        .Take(50)
-                        .ToList();
-
-        // Album-Cover abrufen und zu jedem Track hinzufügen
-        foreach (var track in playlistData)
-        {
-            track.AlbumCoverUrl = await SpotifyService.GetAlbumCoverUrl(track.TrackName, track.ArtistNames);
-        }
+                await Task.Delay(1000); // Simuliert eine Ladeverzögerung
+        playlistData = await Task.Run(() => 
+            DbContext.Tracks
+                     .OrderBy(track => track.Rank)
+                     .Take(50)
+                     .ToList()
+        );
     }
 }
