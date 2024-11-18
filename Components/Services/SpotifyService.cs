@@ -1,54 +1,85 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
+using SpotifyAPITopTracks.Models;
 
 namespace SpotifyAPITopTracks.Services
 {
-public class SpotifyService
-{
-    private const string AccessToken = "BQAgtdgE4G-h0-pWX2I2V0C6zYXauRHnx40Me6BUrZ-yXTww5nDfpViuBTuI5cVMW5BGRDHRPZbjgViYMpaWPekLXnwjD9JqBAtWbr6bmaT-wxR4nWc";
-    
-    public async Task<string> GetAlbumCoverUrl(string songTitle, string artistName)
+    public class SpotifyService
     {
-        using var client = new HttpClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
+        private readonly HttpClient _httpClient;
 
-        var searchUrl = $"https://api.spotify.com/v1/search?q=track:{Uri.EscapeDataString(songTitle)}%20artist:{Uri.EscapeDataString(artistName)}&type=track&limit=1";
-        var response = await client.GetAsync(searchUrl);
-        if (response.IsSuccessStatusCode)
+        // Konstruktor mit Dependency Injection
+        public SpotifyService(HttpClient httpClient)
         {
-            var content = await response.Content.ReadAsStringAsync();
-            var spotifyResponse = JsonSerializer.Deserialize<SpotifySearchResponse>(content);
-            var albumCoverUrl = spotifyResponse?.Tracks.Items.FirstOrDefault()?.Album.Images.FirstOrDefault()?.Url;
-            return albumCoverUrl;
+            _httpClient = httpClient;
         }
 
-        return null;
+        public async Task<List<Track>> GetTopTracksAsync(string accessToken)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            // Spotify-API-Endpunkt für eine spezifische Playlist
+            string playlistUrl = "https://api.spotify.com/v1/playlists/37i9dQZEVXbMDoHDwVN2tF/tracks";
+
+            var response = await _httpClient.GetAsync(playlistUrl);
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            var spotifyResponse = JsonSerializer.Deserialize<SpotifyPlaylistResponse>(content);
+
+            // Konvertiere die API-Daten in lokale Track-Objekte
+            var tracks = spotifyResponse.Items.Select(item => new Track
+            {
+                TrackName = item.Track.Name,
+                ArtistNames = string.Join(", ", item.Track.Artists.Select(a => a.Name)),
+                Uri = item.Track.Uri,
+                Source = "Spotify",
+                Streams = 0 // Streams werden nicht von der API bereitgestellt
+            }).ToList();
+
+            return tracks;
+        }
+
+        public async Task<string> GetAccessTokenAsync(string clientId, string clientSecret)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://accounts.spotify.com/api/token");
+            var encodedCredentials = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"{clientId}:{clientSecret}"));
+
+            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", encodedCredentials);
+            request.Content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("grant_type", "client_credentials")
+            });
+
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            var jsonDoc = JsonDocument.Parse(jsonResponse);
+
+            return jsonDoc.RootElement.GetProperty("access_token").GetString();
+        }
+
+        public class SpotifyPlaylistResponse
+        {
+            public List<PlaylistItem> Items { get; set; }
+
+            public class PlaylistItem
+            {
+                public SpotifyTrack Track { get; set; }
+            }
+
+            public class SpotifyTrack
+            {
+                public string Name { get; set; }
+                public List<SpotifyArtist> Artists { get; set; }
+                public string Uri { get; set; }
+            }
+
+            public class SpotifyArtist
+            {
+                public string Name { get; set; }
+            }
+        }
     }
-}
-
-
-public class SpotifySearchResponse
-{
-    public TrackList Tracks { get; set; }
-
-    public class TrackList
-    {
-        public List<Track> Items { get; set; }
-    }
-
-    public class Track
-    {
-        public Album Album { get; set; }
-    }
-
-    public class Album
-    {
-        public List<Image> Images { get; set; }
-    }
-
-    public class Image
-    {
-        public string Url { get; set; }
-    }
-}
 }

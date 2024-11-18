@@ -1,24 +1,31 @@
-using CsvHelper;                  
 using System.Globalization;
 using SpotifyAPITopTracks.Services;
 using SpotifyAPITopTracks.Models;
 
 namespace SpotifyAPITopTracks.Data
 {
-    public class DataInitializer
+    public static class DataInitializer
     {
-        public static void Initialize(ApplicationDbContext context)
+        public static async Task Initialize(ApplicationDbContext context, SpotifyService spotifyService)
         {
+            // Datenbank erstellen, falls sie nicht existiert
             context.Database.EnsureCreated();
 
-            // Überprüfen, ob bereits Daten in der Datenbank vorhanden sind
+            // Überprüfen, ob die Datenbank bereits Daten enthält
             if (context.Tracks.Any())
-                return; // Falls Daten vorhanden sind, keine weiteren Daten laden
+                return;
 
-            // CSV-Daten laden
-            var tracks = CsvService.LoadCsvData("wwwroot/regional-global-weekly-2024-10-24.csv");
+            // API-Zugriff einrichten
+            var clientId = Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");
+            var clientSecret = Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_SECRET");
 
-            // Füge die geladenen Daten zur Datenbank hinzu
+            // Access Token von der Spotify API abrufen
+            var accessToken = await spotifyService.GetAccessTokenAsync(clientId, clientSecret);
+
+            // Top-Tracks von Spotify abrufen
+            var tracks = await spotifyService.GetTopTracksAsync(accessToken);
+
+            // Tracks in die Datenbank laden
             context.Tracks.AddRange(tracks);
             context.SaveChanges();
         }

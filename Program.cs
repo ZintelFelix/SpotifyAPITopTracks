@@ -14,8 +14,7 @@ builder.Services
     .AddInteractiveServerComponents();
 
 builder.Services.AddSingleton<CsvService>();
-builder.Services.AddSingleton<SpotifyService>();
-
+builder.Services.AddHttpClient<SpotifyService>(); // Ändere zu AddHttpClient
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("Data Source=playlist.db"));
 
@@ -33,7 +32,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    DataInitializer.Initialize(db); // Initialisiere die Datenbank und lade CSV-Daten, falls leer
+    var spotifyService = scope.ServiceProvider.GetRequiredService<SpotifyService>();
+    await DataInitializer.Initialize(db, spotifyService); // Initialisiere Datenbank und lade API-Daten
 }
 
 // Configure the HTTP request pipeline.
