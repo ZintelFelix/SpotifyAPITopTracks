@@ -8,7 +8,6 @@ namespace SpotifyAPITopTracks.Services
     {
         private readonly HttpClient _httpClient;
 
-        // Konstruktor mit Dependency Injection
         public SpotifyService(HttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -18,7 +17,7 @@ namespace SpotifyAPITopTracks.Services
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            // Spotify-API-Endpunkt für eine spezifische Playlist
+            // Spotify-API-Endpunkt für die "Global Top 50"-Playlist
             string playlistUrl = "https://api.spotify.com/v1/playlists/37i9dQZEVXbMDoHDwVN2tF/tracks";
 
             var response = await _httpClient.GetAsync(playlistUrl);

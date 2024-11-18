@@ -14,9 +14,12 @@ builder.Services
     .AddInteractiveServerComponents();
 
 builder.Services.AddSingleton<CsvService>();
-builder.Services.AddHttpClient<SpotifyService>(); // Ändere zu AddHttpClient
+builder.Services.AddHttpClient<SpotifyService>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("Data Source=playlist.db"));
+
+// Hintergrunddienst für Chart-Updates
+builder.Services.AddHostedService<ChartUpdater>();
 
 // Add Blazorise services
 builder.Services
@@ -33,14 +36,13 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     var spotifyService = scope.ServiceProvider.GetRequiredService<SpotifyService>();
-    await DataInitializer.Initialize(db, spotifyService); // Initialisiere Datenbank und lade API-Daten
+    await DataInitializer.Initialize(db, spotifyService);
 }
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
